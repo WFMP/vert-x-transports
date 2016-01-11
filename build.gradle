@@ -7,7 +7,6 @@ version = '1.0.0'
 archivesBaseName = 'vertx-transport'
 
 repositories {
-    maven { url 'https://repository.apache.org/content/groups/snapshots'}
     mavenCentral()
 }
 
@@ -18,9 +17,6 @@ dependencies {
     compile "org.vert-x:vertx-core:$vertxVersion"
     compile "org.vert-x:vertx-platform:$vertxVersion"
     compile "org.slf4j:slf4j-api:$slf4jVersion"
-    compile "org.apache.ws.commons.axiom:axiom-api:$axiomVersion"
-    compile "org.apache.ws.commons.axiom:axiom-dom:$axiomVersion"
-    compile "org.apache.ws.commons.axiom:axiom-impl:$axiomVersion"
 }
 
 task wrapper(type: Wrapper) {
