@@ -25,7 +25,6 @@ import org.vertx.java.core.http.HttpClientRequest;
 import org.vertx.java.core.http.HttpClientResponse;
 import org.vertx.java.core.http.HttpServerResponse;
 
-import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.io.StringWriter;
@@ -129,7 +128,15 @@ public class VertxSender extends AbstractTransportSender {
 //            final String contentType = getContentType(messageContext);
             final String contentType = "text/xml;charset=UTF-8"; //Not sure the right way to infer this in axis2 yet. Hard code for now.
             httpClientRequest.exceptionHandler(exceptionHandler);
-            httpClientRequest.setTimeout(60000);
+            int requestTimeout = 60000;
+            if (axisConfiguration.getParameter("requestTimeout") != null ) {
+                Object value = axisConfiguration.getParameter("requestTimeout").getValue();
+                if (value instanceof String) {
+                    requestTimeout = Integer.parseInt((String) value);
+                    log.info("[Vertx Axis2 Transport] [Request] Overriding default request timeout value. Request timeout is now {}", requestTimeout);
+                }
+            }
+            httpClientRequest.setTimeout(requestTimeout);
 
             final Buffer buffer = getBodyBuffer(messageContext);
             String soapAction = String.format("\"%s\"", messageContext.getSoapAction() != null ? messageContext.getSoapAction() : "");
