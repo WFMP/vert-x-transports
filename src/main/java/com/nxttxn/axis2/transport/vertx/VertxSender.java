@@ -85,6 +85,7 @@ public class VertxSender extends AbstractTransportSender {
             log.debug("[Vertx Axis2 Transport] [Request] [Protocol] " + protocalString);
             if(protocalString.equalsIgnoreCase("https")) {
                 httpClient.setSSL(true);
+                httpClient.setVerifyHost(false);
             }
             //we'll want to cache these clients
 
@@ -128,15 +129,16 @@ public class VertxSender extends AbstractTransportSender {
 //            final String contentType = getContentType(messageContext);
             final String contentType = "text/xml;charset=UTF-8"; //Not sure the right way to infer this in axis2 yet. Hard code for now.
             httpClientRequest.exceptionHandler(exceptionHandler);
-            int requestTimeout = 60000;
-            if (axisConfiguration.getParameter("requestTimeout") != null ) {
-                Object value = axisConfiguration.getParameter("requestTimeout").getValue();
-                if (value instanceof String) {
-                    requestTimeout = Integer.parseInt((String) value);
-                    log.info("[Vertx Axis2 Transport] [Request] Overriding default request timeout value. Request timeout is now {}", requestTimeout);
-                }
-            }
-            httpClientRequest.setTimeout(requestTimeout);
+            httpClientRequest.setTimeout(60000);
+//            int requestTimeout = 60000;
+//            if (axisConfiguration.getParameter("requestTimeout") != null ) {
+//                Object value = axisConfiguration.getParameter("requestTimeout").getValue();
+//                if (value instanceof String) {
+//                    requestTimeout = Integer.parseInt((String) value);
+//                    log.info("[Vertx Axis2 Transport] [Request] Overriding default request timeout value. Request timeout is now {}", requestTimeout);
+//                }
+//            }
+//            httpClientRequest.setTimeout(requestTimeout);
 
             final Buffer buffer = getBodyBuffer(messageContext);
             String soapAction = String.format("\"%s\"", messageContext.getSoapAction() != null ? messageContext.getSoapAction() : "");
